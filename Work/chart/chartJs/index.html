@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Chart.js Drag Data Points Plugin</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
+    <script src="https://chrispahm.github.io/chartjs-plugin-dragdata/assets/chartjs-plugin-dragdata.min.js"></script>
+    <style>
+      html,
+      body {
+        font-family: "Segoe UI";
+        font-size: 30px;
+      }
+
+      canvas {
+        background-color: white;
+        position: absolute;
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas
+      id="chartJSContainer"
+      style="height: 90%; width: 90%; max-width: 800px;"
+    ></canvas>
+
+    <script>
+      Chart.pluginService.register({
+        beforeDraw: function (chart, easing) {
+          const { ctx, scale, config } = chart;
+          const { xCenter, yCenter, drawingArea: radius } = scale;
+
+          ctx.save();
+          ctx.arc(xCenter, yCenter, radius, 0, Math.PI * 2);
+          ctx.fillStyle = config.options.chartArea.backgroundColor;
+          ctx.fill();
+          ctx.restore();
+        },
+      });
+
+      var options = {
+        type: "radar",
+        data: {
+          labels: [
+            "agresivní",
+            "asertivní",
+            "bystrý",
+            "citlivý",
+            "energický",
+            "hloubavý",
+            "optimistický",
+            "nezávislý",
+            "ochotný",
+            "starostlivý",
+            "šťastný",
+            "vnímavý",
+            "veselý",
+            "uvolněný",
+            "trpělivý",
+            "nervozní",
+            "logický",
+            "spolehlivý",
+            "láskyplný",
+            "introvertní",
+            "milý",
+            "přátelský",
+            "skeptický",
+          ],
+          datasets: [
+            {
+              label: "Moje charakteristika",
+              backgroundColor: "#00000010",
+              //fill: false,
+              data: [
+                16,
+                7,
+                15,
+                8,
+                11,
+                16,
+                16,
+                12,
+                15,
+                14,
+                12,
+                8,
+                20,
+                13,
+                11,
+                11,
+                8,
+                18,
+                14,
+                20,
+                17,
+                14,
+                20,
+              ],
+              pointHitRadius: 35,
+              pointRadius: 10,
+              pointHoverRadius: 35,
+              pointBackgroundColor: "#0000FF55",
+              pointHoverBackgroundColor: "#FF0000BB",
+              lineTension: 0.0,
+              borderWidth: 10,
+            },
+          ],
+        },
+        options: {
+          layout: {
+            padding: {
+              left: 0,
+              right: 20,
+              top: 20,
+              bottom: 40,
+            },
+          },
+          chartArea: { backgroundColor: "#FFFFFFFF" },
+          dragData: true,
+          dragDataRound: 0,
+          dragOptions: {
+            showTooltip: true,
+          },
+          onDragStart: function (e) {
+            // console.log(e)
+          },
+          onDrag: function (e, datasetIndex, index, value) {
+            e.target.style.cursor = "grabbing";
+            // console.log(datasetIndex, index, value)
+          },
+          onDragEnd: function (e, datasetIndex, index, value) {
+            e.target.style.cursor = "default";
+            // console.log(datasetIndex, index, value)
+          },
+          hover: {
+            onHover: function (e) {
+              const point = this.getElementAtEvent(e);
+              if (point.length) e.target.style.cursor = "grab";
+              else e.target.style.cursor = "default";
+            },
+          },
+          scale: {
+            gridLines: {
+              circular: true,
+              color: [
+                "#00000020",
+                "#00000019",
+                "#00000018",
+                "#00000017",
+                "#00000016",
+                "#00000015",
+                "#00000014",
+                "#00000013",
+                "#00000012",
+                "#00000011",
+                "#00000010",
+                "#00000009",
+                "#00000008",
+                "#00000007",
+                "#00000006",
+                "#00000005",
+                "#00000004",
+                "#00000003",
+                "#00000002",
+                "#00000001",
+              ], // notice how the last (additional) line is set to transparent
+            },
+            pointLabels: {
+              //fontStyle: "bold",
+              fontSize: 16,
+            },
+
+            ticks: {
+              max: 20,
+              min: 0,
+              display: false,
+              stepSize: 1,
+            },
+          },
+        },
+      };
+
+      var ctx = document.getElementById("chartJSContainer").getContext("2d");
+      window.test = new Chart(ctx, options);
+    </script>
+  </body>
+</html>
